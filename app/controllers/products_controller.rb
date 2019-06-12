@@ -1,6 +1,6 @@
 class ProductsController < ApplicationController
   before_action :set_product, only: [:show, :edit, :update, :destroy]
-  before_action :set_user, only: [:create]
+  before_action :authenticate_user!, except: [:index, :show]
 
   # GET /products
   # GET /products.json
@@ -26,7 +26,7 @@ class ProductsController < ApplicationController
   # POST /products.json
   def create
     @product = Product.new(product_params)
-    @product.user_id = @user_id
+    @product.user = current_user
 
     respond_to do |format|
       if @product.save
@@ -70,11 +70,8 @@ class ProductsController < ApplicationController
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
-    def set_user
-      @user_id = current_user.id
-    end
 
     def product_params
-      params.require(:product).permit(:name, :description, :price, :sold, :user_id)
+      params.require(:product).permit(:name, :description, :price)
     end
 end
