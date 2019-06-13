@@ -2,11 +2,10 @@ class SalesController < ApplicationController
 before_action :authenticate_user!
 before_action :sales_params, :find_product, except: [:index]
   def index
+    @total = 0
     @sales = Sale.all
-    @all_bought_products = []
     @my_bought_products = []
     @sales.each do |sale|
-      @all_bought_products.push(sale.product)
       if sale.user_id == current_user.id
         @my_bought_products.push(sale.product)
       end

@@ -8,12 +8,14 @@ class ProductsController < ApplicationController
   def index
     @products = Product.all
     @on_sale_products = []
-    @own_products = []
+    @my_products_on_sale = []
     @products.each do |product|
-      if ((current_user == nil) || (current_user.id != product.user.id)) && (product.sold == false)
+      if current_user == nil
         @on_sale_products.push(product)
-      elsif current_user.id == product.user.id
-        @own_products.push(product)
+      elsif (current_user.id != product.user.id) && (product.sold == false)
+        @on_sale_products.push(product)
+      elsif current_user.id == product.user.id && product.sold == false
+        @my_products_on_sale.push(product)
       end
     end
   end
