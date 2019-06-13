@@ -1,11 +1,21 @@
 class ProductsController < ApplicationController
   before_action :set_product, only: [:show, :edit, :update, :destroy]
   before_action :authenticate_user!, except: [:index, :show]
+  before_action :owner?, only: [:edit, :destroy]
 
   # GET /products
   # GET /products.json
   def index
     @products = Product.all
+    @on_sale_products = []
+    @own_products = []
+    @products.each do |product|
+      if ((current_user == nil) || (current_user.id != product.user.id)) && (product.sold == false)
+        @on_sale_products.push(product)
+      elsif current_user.id == product.user.id
+        @own_products.push(product)
+      end
+    end
   end
 
   # GET /products/1
@@ -20,6 +30,8 @@ class ProductsController < ApplicationController
 
   # GET /products/1/edit
   def edit
+    redirect_to root_path, notice: 'Solo puedes modificar productos propios' if owner? == false
+
   end
 
   # POST /products
@@ -27,7 +39,6 @@ class ProductsController < ApplicationController
   def create
     @product = Product.new(product_params)
     @product.user = current_user
-
     respond_to do |format|
       if @product.save
         format.html { redirect_to @product, notice: 'Product was successfully created.' }
@@ -67,6 +78,10 @@ class ProductsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_product
       @product = Product.find(params[:id])
+    end
+
+    def owner?
+      @product.user_id == current_user.id
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

@@ -20,8 +20,9 @@
       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav">
           <% if current_user != nil %>
-            <a class="nav-item nav-link disabled" href="#" tabindex="-1" aria-disabled="true"><%= current_user.email %></a>
+            <a class="nav-item nav-link disabled" href="#" tabindex="-1" aria-disabled="true"><%= link_to current_user.email, user_path(current_user), class:'nav-item nav-link' %></a>
             <%= link_to 'Cerrar sesión', destroy_user_session_path, method: :delete, class: 'nav-item nav-link' %>
+            <%= link_to 'Productos comprados', sales_path, class:'nav-item nav-link' %>
           <% else %>
             <%= link_to 'Iniciar sesión', new_user_session_path, class:'nav-link' %>
           <% end %>
@@ -29,7 +30,6 @@
       </div>
     </nav>
     <div class="container">
-      <p class="notice"><%= notice %></p>
       <p class="alert"><%= alert %></p>
       <%= yield %>
     </div>

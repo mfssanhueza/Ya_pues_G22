@@ -1,0 +1,14 @@
+<% @my_bought_products.each do |product| %>
+<div class="card p-3">
+  <blockquote class="blockquote mb-0 card-body">
+    <h4><%= product.name %></h4>
+    <h6><%= "$#{product.price}" %></h6>
+    <footer class="blockquote-footer">
+      <small class="text-muted"><%= link_to product.user.email, user_path(product.user) %> </small>
+      <br>
+      <%= link_to 'Show', product, class:'card-link', class:'btn btn-info btn-sm' %>
+    </footer>
+  </blockquote>
+</div>
+
+<% end %>
